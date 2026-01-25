@@ -8,7 +8,7 @@ import subprocess
 
 BITBUCKET_REPO_URL = "https://bitbucket.org/Ruben_Rodriguez_Cardos/phd_experiments.git"
 REPO_NAME = "phd_experiments"
-SCRIPT_NAME = "elastic_patterns_images_experiment.py"
+SCRIPT_NAME = "src/elastic_patterns_images_experiment.py"
 
 import mlflow
 

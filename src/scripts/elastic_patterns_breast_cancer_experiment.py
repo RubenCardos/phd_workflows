@@ -156,7 +156,7 @@ def test_elastic_patterns(X_test, y_test, elastic_patterns):
 
 def execute_experiment(deformation_method, experiment_name):
 
-    data_path = "/opt/airflow/dags/scripts/resources/breast_cancer/breast-cancer-wisconsin-data.csv"
+    data_path = "/opt/airflow/dags/phd_workflows/src/scripts/resources/breast_cancer/breast-cancer-wisconsin-data.csv"
     data = pd.read_csv(data_path, sep = ',')
 
     ## Drop id

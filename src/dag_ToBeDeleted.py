@@ -6,10 +6,10 @@ from airflow.operators.python import PythonOperator
 
 import mlflow
 
-from scripts.elastic_patterns_images_experiment import execute_experiment
+from phd_workflows.src.scripts.script_ToBeDeleted import execute_experiment
 
 
-EXPERIMENT_NAME = "elastic_patterns_experiment_1"
+EXPERIMENT_NAME = "ToBeDeleted"
 
 def check_experiment_exists():
     
@@ -24,12 +24,13 @@ def check_experiment_exists():
         experiment_id = experiment.experiment_id
         print(f"Experiment {EXPERIMENT_NAME} already exists with id: {EXPERIMENT_NAME}")
 
-DAG_ID = "elastic_patterns_experiment_1"
+DAG_ID = "ToBeDeleted_dag"
 
 with DAG(
     dag_id=DAG_ID,
     start_date=datetime.datetime(2021, 1, 1),
     schedule=None,
+    tags=["experiment_generetor","ToBeDeleted"],
 ):
     init = EmptyOperator(task_id = "init")
     end = EmptyOperator(task_id = "end")
@@ -50,6 +51,3 @@ with DAG(
                         )
         
         init >> t_check_experiment_exists >> t_experiment >> end
-
-
-
