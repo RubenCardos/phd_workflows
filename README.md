@@ -23,5 +23,5 @@ src # source code
 
 This repository is and example of how to use workflows (as dags) inside the platform in this repo: https://github.com/RubenCardos/phd_platform, so the use could depends on the use case.
 
-For esperiment_1, dag: elastic_patterns_experiment_1.py its recomened to create a pool (in Airflow) called "experiment_1_pool" with 2 sloots. More info about pools could be found here: https://www.astronomer.io/docs/learn/airflow-pools
+For experiment_1, dag: elastic_patterns_experiment_1.py its recomened to create a pool (in Airflow) called "experiment_1_pool" with 2 slots. More info about pools could be found here: https://www.astronomer.io/docs/learn/airflow-pools
 
