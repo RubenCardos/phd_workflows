@@ -63,11 +63,3 @@ class ElasticPattern:
             deformation_energy += j
 
         return deformation_energy
-
-class MLFlow_EP(mlflow.pyfunc.PythonModel):
-    
-    def __init__(self, model):
-        self.model = model
-
-    def compare(self, context, sample):
-        return self.model.compare(sample)
