@@ -63,11 +63,6 @@ with DAG(
         bash_command=f"cd /tmp && rm -rf {REPO_NAME}",
     )
 
-    """execute_experiment= BashOperator(
-        task_id="execute_experiment",
-        bash_command=f"cd /tmp/{REPO_NAME} && chmod +x {SCRIPT_NAME} && exec python {SCRIPT_NAME}",
-    )"""
-
     for deformation_method in ["Hybrid", "Symmetric", "Asintotic", "Inverse"]:
 
         t_experiment = PythonOperator(
@@ -78,5 +73,5 @@ with DAG(
         )
 
         t_check_experiment_exists >> t_experiment >> cleanup_repo
-    
+
     init >> clone_repo >> t_check_experiment_exists >> t_experiment >> cleanup_repo >> end
