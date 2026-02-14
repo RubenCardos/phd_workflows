@@ -1,3 +1,4 @@
 phd_experiment_generator/
-src/scripts/__pycache__
+src/scripts/__pycache__/
 src/__pycache__
+*.pyc

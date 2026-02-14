@@ -5,7 +5,7 @@ import time
 from math import e
 import mlflow
 
-from ElasticPattern import ElasticPattern
+from phd_workflows.src.scripts.elastic_pattern import ElasticPattern
 
 def predict_elastic_pattern(sample, elastic_patterns):
     res = -1
