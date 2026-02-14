@@ -10,12 +10,17 @@ The repository is organized as follows:
 
 
 ```bash
-src
-├── License  # License File, MIT license
-├── README.md  # Readme file 
-└── gitignore.yml # Git ignore file, to ignore some non-needed file in the reposotory
+License  # License File, MIT license
+README.md  # Readme file 
+src # source code
+.gitingore # git ignore file
+├── scripts # folder to add Python script to execute inside the workflows (dags)
+├── <expriment.py> # Python script to orquestate a experiment (could be define as a Python script in scripts folder) as a Airflow dag
+└── ...
 ```
 
 ## How To Use
+
+This repository is and example of how to use workflows (as dags) inside the platform in this repo: https://github.com/RubenCardos/phd_platform, so the use could depends on the use case
 
 
