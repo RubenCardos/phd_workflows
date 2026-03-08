@@ -45,7 +45,7 @@ with DAG(
     schedule=None,
 ):
     init = EmptyOperator(task_id = "init")
-    end = EmptyOperator(task_id = "end")
+    end = EmptyOperator(task_id = "end", trigger_rule = "one_success")
 
     clone_repo = BashOperator(
         task_id="clone_repo",
