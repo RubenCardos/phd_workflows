@@ -5,7 +5,6 @@ import time
 from math import e
 import pandas as pd
 
-
 import mlflow
 
 from phd_workflows.src.scripts.elastic_pattern import ElasticPattern
@@ -58,7 +57,7 @@ def test_elastic_patterns(X_test, y_test, elastic_patterns):
     return accuracy
 
 
-def execute_experiment(deformation_method, experiment_name):
+def execute_experiment(deformation_method, experiment_name, tags_to_mantein, group_function):
 
     # Path inside platofrm/airflow for the file (as an example how to load data within the platform)
     data_path = "/opt/airflow/dags/phd_workflows/src/scripts/resources/breast_cancer/breast-cancer-wisconsin-data.csv"
@@ -87,14 +86,35 @@ def execute_experiment(deformation_method, experiment_name):
     data_diagnosis_m = data[data['diagnosis'] == 1]
     data_diagnosis_b = data[data['diagnosis'] == 0]
 
+    # Tags, feature representation to mantein
+    #tags_to_mantein = ["mean","worst"]
+    print(f"Features repreentation to mantein: f{tags_to_mantein}")
+    pattern = "|".join(tags_to_mantein)
+    data = data.filter(regex=pattern)
+
     print(" === Data Diagnosis M ===")
     print(data_diagnosis_m.describe())
 
     print(" === Data Diagnosis B ===")
     print(data_diagnosis_b.describe())
 
-    data_diagnosis_m_mean = data_diagnosis_m.mean().to_frame().T
-    data_diagnosis_b_mean = data_diagnosis_b.mean().to_frame().T
+    #Group Function
+    print(f"Group function: {group_function}")
+    data_diagnosis_m_mean = None
+    data_diagnosis_b_mean = None
+    
+    if group_function == "mean":
+        data_diagnosis_m_mean = data_diagnosis_m.mean().to_frame().T
+        data_diagnosis_b_mean = data_diagnosis_b.mean().to_frame().T
+
+    if group_function == "min":
+        data_diagnosis_m_mean = data_diagnosis_m.min().to_frame().T
+        data_diagnosis_b_mean = data_diagnosis_b.min().to_frame().T
+    
+    if group_function == "max":
+        data_diagnosis_m_mean = data_diagnosis_m.max().to_frame().T
+        data_diagnosis_b_mean = data_diagnosis_b.max().to_frame().T
+
     data_diagnosis_mean = pd.concat([data_diagnosis_m_mean, data_diagnosis_b_mean])
 
     print(" === Training Data ===")
@@ -130,6 +150,8 @@ def execute_experiment(deformation_method, experiment_name):
         print("Execution time: ", time.time() - start, " seconds\n")
 
         mlflow.log_param("deformation_method", deformation_method)
+        mlflow.log_param("feature_representations", tags_to_mantein)
+        mlflow.log_param("group_fucntion", group_function)
         mlflow.log_param("n_of_samples", len(X_test.values))
         mlflow.log_metric("accuracy", accuracy)
         mlflow.set_tag("Deformation Method", deformation_method)

@@ -6,7 +6,7 @@ from datetime import datetime
 import subprocess
 
 
-BITBUCKET_REPO_URL = "https://bitbucket.org/Ruben_Rodriguez_Cardos/phd_experiments.git"
+BITBUCKET_REPO_URL = "https://github.com/RubenCardos/phd_experiments"
 REPO_NAME = "phd_experiments"
 SCRIPT_NAME = "src/elastic_patterns_images_experiment.py"
 
@@ -63,6 +63,12 @@ with DAG(
         bash_command=f"cd /tmp && rm -rf {REPO_NAME}",
     )
 
+    cleanup_repo_becouse_fail = BashOperator(
+        task_id="cleanup_repo_becouse_fail",
+        bash_command=f"cd /tmp && rm -rf {REPO_NAME}",
+        trigger_rule="all_failed"
+    )
+
     for deformation_method in ["Hybrid", "Symmetric", "Asintotic", "Inverse"]:
 
         t_experiment = PythonOperator(
@@ -72,6 +78,6 @@ with DAG(
             pool = "experiment_1_pool"
         )
 
-        t_check_experiment_exists >> t_experiment >> cleanup_repo
+        t_check_experiment_exists >> t_experiment >> [cleanup_repo, cleanup_repo_becouse_fail]
 
-    init >> clone_repo >> t_check_experiment_exists >> t_experiment >> cleanup_repo >> end
+    init >> clone_repo >> t_check_experiment_exists >> t_experiment >> [cleanup_repo, cleanup_repo_becouse_fail] >> end

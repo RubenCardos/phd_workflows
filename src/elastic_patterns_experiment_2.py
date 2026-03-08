@@ -13,7 +13,7 @@ EXPERIMENT_NAME = "elastic_patterns_experiment_2"
 
 def check_experiment_exists():
 
-    mlflow_server_url = "http://host.docker.internal:5000" #Tis could be a airflow vcariable or airflow connection
+    mlflow_server_url = "http://host.docker.internal:5000" #This could be a airflow variable or airflow connection
     mlflow.set_tracking_uri(mlflow_server_url)
     experiment = mlflow.get_experiment_by_name(EXPERIMENT_NAME)
 
@@ -39,15 +39,31 @@ with DAG(
                             python_callable = check_experiment_exists
         )
 
-    for deformation_method in ["Hybrid", "Symmetric", "Asintotic", "Inverse"]:
+    
 
-        t_experiment = PythonOperator(
-                            task_id=f"experiment_{deformation_method}_method", 
-                            python_callable=execute_experiment, 
-                            op_kwargs={"deformation_method": deformation_method, "experiment_name": EXPERIMENT_NAME},
-                        )
+    for deformation_method in ["Hybrid", "Symmetric", "Asintotic", "Inverse"]:
         
-        init >> t_check_experiment_exists >> t_experiment >> end
+        experiment_index = 1
+
+        for tags_to_mantein in [["mean","worst", "se"],["mean","worst"],["worst", "se"],["mean", "se"],["mean"],["worst"],["se"]]:
+            for group_function in ["mean", "min", "max"]:
+
+                t_experiment = PythonOperator(
+                                    task_id=f"experiment_{deformation_method}_method_{experiment_index}",
+                                    python_callable=execute_experiment,
+                                    op_kwargs={
+                                        "deformation_method": deformation_method,
+                                        "tags_to_mantein": tags_to_mantein, 
+                                        "group_function": group_function, 
+                                        "experiment_name": EXPERIMENT_NAME
+                                    },
+                                    pool = "experiment_2_pool"
+                                )
+
+                experiment_index += 1
+
+                # Set dependencies
+                init >> t_check_experiment_exists >> t_experiment >> end
         
 
 
